@@ -1,5 +1,9 @@
 package main
-import "fmt"
+
+import (
+	"fmt"
+	"math"
+)
 
 // 函数可以接收多个参数
 // **** 注意 类型在变量名
@@ -7,6 +11,7 @@ import "fmt"
 func add(x int, y int) int {
 	return x + y
 }
+
 // 连续两个或者多个参数类型相同时，除了最后一个要申明类型以外，其他的都可以省略
 func add1(x, y int) int {
 	return x + y
@@ -17,7 +22,7 @@ func add2(x, y, z int) int {
 
 // 函数可以返回任意数量的返回值
 // 这里是返回两个字符串
-func swap(x, y string) (string, string)  {
+func swap(x, y string) (string, string) {
 	return y, x
 }
 
@@ -25,10 +30,24 @@ func swap(x, y string) (string, string)  {
 // 返回值的名称应当 具有一定意义，它可以作为文档使用
 // 没参数的 retrun 语音 直接返回 已命名的返回值
 // 直接返回的语句 一般在 短函数中使用，长函数使用的话 会影响代码的可读性
-func split(sum int) (x, y int)  {
-	x = sum * 4 /9
+func split(sum int) (x, y int) {
+	x = sum * 4 / 9
 	y = sum - 4
 	return
+}
+
+// 函数作为参数传递
+func compute(fn func(float64, float64) float64) float64 {
+	return fn(3, 4)
+}
+
+// 函数的闭包
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
 }
 func main() {
 	// 打印输出
@@ -37,4 +56,15 @@ func main() {
 	fmt.Println(a, b)
 	x, y := split(17)
 	fmt.Println(x, y)
+	// 将函数作为参数传递
+	hypot := func(x, y float64) float64 {
+		return math.Sqrt(x*x + y*y)
+	}
+	fmt.Println("====hypot", hypot(5, 12))
+
+	fmt.Println("=====compute", compute(hypot))
+
+	pos, neg := adder(), adder()
+	fmt.Println("=======pos", pos(1))
+	fmt.Println("=========neg", neg(2))
 }
