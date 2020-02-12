@@ -295,3 +295,72 @@ func (p *GoProgrammer) WriteHelloWorld() Code {
 
   } // 这个是类型
 ```
+
+#### 空接口与断言
+
+```go
+1、空接口可以表示任何类型
+
+2、通过断言来将空接口转换为指定类型
+v, ok :=p.(int) // ok = true 时为转换成功
+```
+
+#### GO 接口最佳实践
+
+```go
+1、倾向于使用小的接口定义，很多接口只包含一个方法
+
+2、较大的接口定义，可以由多个小接口定义组合而成
+
+3、只依赖于必要功能的最小接口
+```
+
+#### Go 的错误机制
+
+```go
+1、没有异常机制
+
+2、error类型实现了 error 接口
+
+3、可以通过 errors.New 来快速创建错误实例
+  type error interface {
+    Error() string
+  }
+  errors.New("n must be in the range[0, 1]")
+
+4、及早失败，避免嵌套 // 先返回错误的信息，再处理逻辑
+```
+
+#### panic
+
+```go
+1、panic 用于不可以恢复的错误
+
+2、panic 退出前会执行 defer 指定的内容
+
+panic VS os.Exit
+
+1、 os.Exit 退出时不会调用 defer 指定的函数
+
+2、os.Exit 退出时不输出当前调用栈的信息
+
+```
+
+#### 当心！ recover 成为恶魔
+
+```go
+  1、形成僵尸服务进程，导致 health check 失效
+
+  2、"Let it Crash" 往往是我们恢复不确定性最好的方法
+```
+
+#### package 包
+
+```go
+1、基本复用模块单元
+   以首字母大写来表明可被包外代码访问
+
+2、代码的 package 可以和所在的目录不一致
+
+3、同一目录的 Go 代码的 package 保持一致
+```
