@@ -1,0 +1,10 @@
+{
+  "go.buildOnSave": "off",
+  "go.lintOnSave" :"on",
+  "go.vetOnSave":"off",
+  "go.buildTags": "",
+  "go.coverOnSave": true,
+  "go.useCodeSnippetsOnFunctionSuggest":true,
+  "go.formatTool": "goreturns",
+  "go.gocodeAutoBuild": false
+}
