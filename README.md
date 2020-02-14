@@ -364,3 +364,33 @@ panic VS os.Exit
 
 3、同一目录的 Go 代码的 package 保持一致
 ```
+
+#### CSP 并发机制
+
+```go
+1、CSP 模式 是通过 Channel 进行通讯的，更松耦合
+2、Go 中 channel 是有容量限制并且独立于处理Groutine。
+```
+#### 多路选择机制和超时
+
+```go
+select
+
+多渠道的选择
+select {
+  case ret := <-retCh1:
+    t.Log("result", ret)
+  case ret := <-retCh2:
+    t.Log("result", ret)
+    default:
+    t.Error("No one returned")
+}
+超时控制
+select {
+  case ret := <-retCh1:
+    t.Log("result", ret)
+  case <-time.After(time.Second * 1) // 通过判断程序执行等待的时间，来返回是否超时
+    t.Error("No one returned")
+}
+
+```

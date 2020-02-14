@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	cm "github.com/easierway/concurrent_map"
+	cm "≥github.com/easierway/concurrent_map"
 )
 
 func TestConcurrentMap(t *testing.T) {
