@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-12 14:11:43
  * @LastEditors  : leo
- * @LastEditTime : 2020-02-12 19:23:06
+ * @LastEditTime : 2020-02-14 17:08:16
  -->
 #### go 的基本数据类型
 
@@ -392,5 +392,110 @@ select {
   case <-time.After(time.Second * 1) // 通过判断程序执行等待的时间，来返回是否超时
     t.Error("No one returned")
 }
+
+```
+
+#### Context 与任务取消
+
+```go
+1、根 Context: 通过 context.Background() 创建
+
+2、子 Context: context.WithCancel(parentContext) 创建
+  ctx, cancel := context.WithCancel(context.Background())
+
+3、当前 Context 被取消时，基于他的子 context 都会被取消
+
+4、接收取消通知 <-ctx.Done()
+```
+
+#### 并发任务(只执行一次)
+
+```go
+单例模式 (懒汉式， 线程安全)
+
+type Singleton struct {
+}
+
+var singleInstance *Singleton
+var once sync.Once
+
+func GetSingletonObj() *Singleton {
+	once.Do(func() {
+		fmt.Println("Create Obj")
+		singleInstance = new(Singleton)
+	})
+	return singleInstance
+}
+
+func TestSingletonObj(t *testing.T) {
+	var wg sync.WaitGroup
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			obj := GetSingletonObj()
+			fmt.Println("obj==========", unsafe.Pointer(obj))
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+}
+```
+
+#### 内置单元测试框架
+
+```go
+1、Fail Error: 该测试失败，该测试继续，其他测试继续执行
+
+2、FailNow, Fatal 该测试失败，该测试中止，其他测试继续执行
+```
+
+#### Benchmark 基准测试
+```go
+func BenchmarkConcatStringByAdd(b *testing.B) {
+  // 与性能测试无关的代码
+  b.ResetTimer()
+  for i :=0; i<b.N; i++ {
+    // 测试代码
+  }
+  b.StopTimer()
+  // 与性能测试无关的代码
+}
+
+测试命令
+go test -bench=. [-benchmem]
+
+-bench=<相关benchmark测试>
+Windows 下使用 go test 命令行时， -bench=.应写为-bench="."
+```
+
+#### 反射编程
+```go
+reflect.TypeOf vs reflect.ValueOf
+
+1、reflect.TypeOf 返回类型(reflect.Type)
+
+2、reflect.ValueOf 返回值(reflect.Value)
+
+3、可以从 reflect.Value 获得类型
+
+4、通过 Kind 的来判断类型
+
+访问 StructTag
+
+type Employee struct {
+	EmployeeID string
+	Name       string `format:"normal"`
+	Age        int
+}
+if nameField, ok := reflect.TypeOf(*e).FieldByName("Name"); !ok {
+		t.Error("Faile")
+	} else {
+		fmt.Println("Tag:format", nameField.Tag.Get("format"))
+	}
+```
+
+#### DeepEqual 比较切片和map
+
+```go
 
 ```
