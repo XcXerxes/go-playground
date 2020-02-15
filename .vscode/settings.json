@@ -6,6 +6,5 @@
   "go.coverOnSave": true,
   "go.useCodeSnippetsOnFunctionSuggest":true,
   "go.formatTool": "goreturns",
-  "go.gocodeAutoBuild": false,
-  "go.gopath": "/Users/zhangjie/xinbo/myself/go/go-playground"
+  "go.gocodeAutoBuild": false
 }

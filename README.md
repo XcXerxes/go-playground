@@ -499,3 +499,85 @@ if nameField, ok := reflect.TypeOf(*e).FieldByName("Name"); !ok {
 ```go
 
 ```
+
+#### http服务的默认路由
+
+```go
+func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) {
+  handle := sh.srv.Handler
+  if handler == nil {
+    handler = DefaultServerMux // 使用缺省的Router
+  }
+  if req.RequestURI == '*' && req.Method =="OPTIONS" {
+    handler = globalOptionsHandler{}
+  }
+  handler.ServeHTTP(rw, req)
+}
+```
+
+#### http服务的路由规则
+```
+1、URL分为两种。末尾是/ ：表示一个子树，后面可以跟其他子路径；
+  末尾不是 /，表示一个叶子，是固定的路径
+
+2、它采用最长匹配原则，如果有多个匹配，一定采用路径最长的进行匹配
+
+3、如果没有找到任何匹配项，会返回404错误
+```
+
+#### sync.Map
+```go
+1、适合读多写少，且Key相对稳定的环境
+
+2、采用了空间换时间的方案，并且采用指针的方式间接实现值的映射，所以存储空间会较 built-in map 大
+```
+
+#### 别让性能被锁住
+```go
+1、减少锁的影响范围
+
+2、减少发生锁冲突的概率
+  sync.Map
+  ConcurrentMap
+
+3、避免锁的使用
+```
+
+#### 内存回收 友好的代码
+
+```go
+1、复杂对象尽量传递引用
+  数组的传递
+  结构体的传递
+
+2、避免内存分配和复制
+  初始化至合适的大小
+  复用内存
+```
+
+#### 打开 GC（内存回收）日志
+```go
+只要在程序执行之前加入环境变量 GODEBUG=gctrace=1 eg:
+  GODEBUG=gctrace=1 go test -bench=.
+  GODEBUG=gctrace=1 go run main.go
+```
+
+#### 面向错误的设计
+
+```go
+1、隔离错误-设计
+
+2、限流
+
+3、不要无休止的等待 - 给阻塞操作一个期限
+
+4、断路器模式 - 防止错误传递
+```
+
+#### Chaos Engineering 原则
+
+```go
+如果问题经常发生 人们就会学习和思考解决它的方法
+
+1、
+```
